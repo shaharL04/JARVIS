@@ -8,7 +8,7 @@
     "build": "tsc",
     "serve": "npm run build && npm run start",
     "client": "npm run dev --prefix ../frontend",
-    "dev": "concurrently \"npm run serve\" \"npm run client\""
+    "dev": "concurrently \"npm run client\" \"npm run serve\""
   },
   "keywords": [],
   "author": "",

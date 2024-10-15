@@ -1,10 +1,7 @@
 import WebSocket from 'ws';
 
 export const handleOpenAiWebSocket = (clientSocket: WebSocket, openaiWs: WebSocket) => {
-    openaiWs.on('open', () => {
-        console.log('Connected to OpenAI Realtime API');
-        // The client sends 'response.create' to initialize session
-    });
+
 
     openaiWs.on('message', (data: WebSocket.Data) => {
         let messageStr;

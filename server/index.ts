@@ -8,10 +8,9 @@ const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
-});
 
-// WebSocket server for handling audio from the frontend
-const wss = new WebSocketServer({ port: 9000 });
+    
+});
 
 // Define OpenAI WebSocket connection URL
 const openaiUrl = 'wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01';
@@ -24,6 +23,14 @@ const openaiWs = new WebSocket(openaiUrl, {
     },
 });
 
+
+// WebSocket server for handling audio from the frontend
+const wss = new WebSocketServer({ port: 9000 });
+
+openaiWs.on('open', () => {
+    console.log('Connected to OpenAI Realtime API');
+    // The client sends 'response.create' to initialize session
+});
 
 wss.on('connection', (clientSocket) => {
     console.log('Client connected');
