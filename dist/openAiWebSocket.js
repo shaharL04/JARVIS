@@ -18,11 +18,19 @@ export const handleOpenAiWebSocket = (clientSocket, openaiWs) => {
     });
     openaiWs.on('error', (error) => {
         console.error('OpenAI WebSocket error:', error);
-        clientSocket.send(JSON.stringify({ type: 'error', error: { message: 'OpenAI WebSocket connection error', details: error.message } }));
+        // Notify the client about the error
+        const errorEvent = {
+            type: 'error',
+            error: {
+                message: 'Failed to connect to OpenAI Realtime API.',
+                details: error.message,
+            },
+        };
+        clientSocket.send(JSON.stringify(errorEvent));
     });
     openaiWs.on('close', () => {
         console.log('OpenAI WebSocket connection closed');
-        clientSocket.close(); // Close the client socket too if the OpenAI WebSocket is closed
+        clientSocket.close();
     });
     // Handle messages from the client and forward them to OpenAI WebSocket
     clientSocket.on('message', (message) => {
@@ -39,14 +47,24 @@ export const handleOpenAiWebSocket = (clientSocket, openaiWs) => {
         }
         catch (e) {
             console.error('Error parsing message from client:', e);
-            clientSocket.send(JSON.stringify({ type: 'error', error: { message: 'Invalid JSON format', details: e.message } }));
+            const errorEvent = {
+                type: 'error',
+                error: {
+                    message: 'Invalid JSON format sent to server.',
+                    details: e.message,
+                },
+            };
+            clientSocket.send(JSON.stringify(errorEvent));
         }
     });
+    // Handle client disconnection
     clientSocket.on('close', () => {
         console.log('Client disconnected');
+        openaiWs.close();
     });
     clientSocket.on('error', (error) => {
         console.error('Client WebSocket error:', error);
+        openaiWs.close();
     });
 };
 //# sourceMappingURL=openAiWebSocket.js.map
