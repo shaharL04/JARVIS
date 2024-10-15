@@ -8,33 +8,43 @@ const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
-
-    
 });
 
 // Define OpenAI WebSocket connection URL
 const openaiUrl = 'wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01';
 
-// Create a WebSocket connection to OpenAI Realtime API
-const openaiWs = new WebSocket(openaiUrl, {
-    headers: {
-        Authorization: `Bearer sk-CWb3g0xHbN0zXYz70qn1IeTq_kvL3BIbXmFRO8wqH6T3BlbkFJHhU-oiRlpKofImvsnr64-MUKKM54UsFsK97S7tzagA`,
-        'OpenAI-Beta': 'realtime=v1',
-    },
-});
+let openaiWs: WebSocket;
+const connectOpenAiWs = () => {
+    openaiWs = new WebSocket(openaiUrl, {
+        headers: {
+            Authorization: `Bearer sk-CWb3g0xHbN0zXYz70qn1IeTq_kvL3BIbXmFRO8wqH6T3BlbkFJHhU-oiRlpKofImvsnr64-MUKKM54UsFsK97S7tzagA`,
+            'OpenAI-Beta': 'realtime=v1',
+        },
+    });
 
+    openaiWs.on('open', () => {
+        console.log('Connected to OpenAI Realtime API');
+    });
+
+    openaiWs.on('close', () => {
+        console.log('OpenAI WebSocket connection closed. Reconnecting in 5 seconds...');
+        setTimeout(connectOpenAiWs, 5000); // Reconnect after 5 seconds
+    });
+
+    openaiWs.on('error', (error) => {
+        console.error('OpenAI WebSocket error:', error);
+        openaiWs.close(); // Close and trigger reconnection
+    });
+};
+
+// Initiate the connection to OpenAI WebSocket
+connectOpenAiWs();
 
 // WebSocket server for handling audio from the frontend
 const wss = new WebSocketServer({ port: 9000 });
 
-openaiWs.on('open', () => {
-    console.log('Connected to OpenAI Realtime API');
-    // The client sends 'response.create' to initialize session
-});
-
 wss.on('connection', (clientSocket) => {
     console.log('Client connected');
-
 
     // Pass both clientSocket and openaiWs to the handler
     handleOpenAiWebSocket(clientSocket, openaiWs);
