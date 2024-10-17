@@ -11,7 +11,6 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
         ...prev,
         { role: 'system', text: 'Connected to assistant.' },
       ]);
-
       
     };
 
@@ -52,6 +51,8 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
     };
 
     wsRef.current = ws;
+
+
 
     return () => {
       ws.close();
