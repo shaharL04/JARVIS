@@ -8,6 +8,7 @@ export const handleClientWebSocket = (clientSocket: WebSocket, openaiWs: WebSock
         clientSocket.on('message', (message: string) => {
             try {
                 const event = JSON.parse(message);
+                console.log("new message arrived front frontend: "+message)
                 forwardToOpenAi(clientSocket, openaiWs, event);
             } catch (error) {
                 console.error('Error parsing message from client:', error);

@@ -3,6 +3,7 @@ let openaiWs = null;
 // Function to create a new OpenAI WebSocket connection with a client socket
 export const connectToOpenAiWebSocket = (clientSocket) => {
     const openaiUrl = 'wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01';
+    console.log('Establishing connection to OpenAI Realtime API...');
     openaiWs = new WebSocket(openaiUrl, {
         headers: {
             Authorization: `Bearer sk-CWb3g0xHbN0zXYz70qn1IeTq_kvL3BIbXmFRO8wqH6T3BlbkFJHhU-oiRlpKofImvsnr64-MUKKM54UsFsK97S7tzagA`,
@@ -14,16 +15,14 @@ export const connectToOpenAiWebSocket = (clientSocket) => {
     });
     openaiWs.on('message', (data) => {
         let messageStr;
-        // Handle binary and string data types
         if (Buffer.isBuffer(data)) {
             messageStr = data.toString('utf-8');
         }
         else if (typeof data === 'string') {
             messageStr = data;
         }
-        console.log('Message received from OpenAI:', messageStr);
         if (messageStr) {
-            clientSocket.send(messageStr); // Send message back to the client
+            clientSocket.send(messageStr);
         }
         else {
             console.warn('Unsupported data type received from OpenAI:', typeof data);
@@ -41,6 +40,7 @@ export const connectToOpenAiWebSocket = (clientSocket) => {
 // Function to forward messages from the client to OpenAI WebSocket
 export const forwardToOpenAi = (clientSocket, openaiWs, message) => {
     if (openaiWs && openaiWs.readyState === WebSocket.OPEN) {
+        console.log("Sending first message: " + JSON.stringify(message));
         openaiWs.send(JSON.stringify(message));
     }
     else {
