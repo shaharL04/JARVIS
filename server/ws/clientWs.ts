@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
-import { forwardToOpenAi } from './openAiWs.js';
+import { forwardToOpenAi } from '../ws/openAiWs.js';
+import { allTools } from '../api/tools.js';
 
 export const handleClientWebSocket = (clientSocket: WebSocket, openaiWs: WebSocket) => {
     console.log('Client connected');
@@ -9,6 +10,9 @@ export const handleClientWebSocket = (clientSocket: WebSocket, openaiWs: WebSock
             try {
                 const event = JSON.parse(message);
                 console.log("new message arrived front frontend: "+message)
+                if(event.type == "response.create"){
+                    event.response.tools.push(allTools)
+                }
                 forwardToOpenAi(clientSocket, openaiWs, event);
             } catch (error) {
                 console.error('Error parsing message from client:', error);
