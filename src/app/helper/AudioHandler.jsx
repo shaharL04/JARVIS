@@ -74,6 +74,7 @@ const processAudio = async (setMessages, wsRef) => {
             audio: processedBase64Audio,
           },
         ],
+      
       },
     };
     wsRef.current.send(JSON.stringify(conversationCreateEvent));
@@ -106,6 +107,8 @@ const processAudio = async (setMessages, wsRef) => {
             User: "Hi JARVIS, I need you to run a diagnostic on my systems."
             
             JARVIS: "Of course, sir. Running diagnostic now. All systems are operating within normal parameters. Shall I optimize the power distribution for more efficient performance?"`,
+            tools: [],
+            tool_choice: "auto",
         },
       };
     wsRef.current.send(JSON.stringify(responseCreateEvent));
