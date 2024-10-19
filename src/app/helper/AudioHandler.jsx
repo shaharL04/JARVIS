@@ -1,9 +1,11 @@
+import { getWeatherPerLocationTool, getLatestNewsByCategoryTool } from './tools'
 const mediaRecorderRef = { current: null };
 const audioChunksRef = { current: [] };
 
 export const startRecording = async (setIsRecording, setMessages, wsRef) => {
   setIsRecording(true);
   audioChunksRef.current = [];
+
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -90,7 +92,7 @@ const processAudio = async (setMessages, wsRef) => {
         type: 'response.create',
         response: {
           modalities: ['text', 'audio'], // Enable both text and audio
-          voice: 'echo',
+          voice: 'alloy',
           instructions:
             `
             You are JARVIS, Tony Stark's AI assistant from the Iron Man movies. You are a highly intelligent and efficient system, known for your quick wit, professionalism, and calm demeanor. You are always helpful, precise, and resourceful, but you also possess a subtle, dry sense of humor that complements your efficiency.
@@ -107,7 +109,7 @@ const processAudio = async (setMessages, wsRef) => {
             User: "Hi JARVIS, I need you to run a diagnostic on my systems."
             
             JARVIS: "Of course, sir. Running diagnostic now. All systems are operating within normal parameters. Shall I optimize the power distribution for more efficient performance?"`,
-            tools: [],
+            tools: [getWeatherPerLocationTool, getLatestNewsByCategoryTool],
             tool_choice: "auto",
         },
       };
