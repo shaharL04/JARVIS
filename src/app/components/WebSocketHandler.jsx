@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { functions } from './apiReqHandler';
+import { functions } from '../helper/apiReqHandler';
 export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
   useEffect(() => {
     const backendUrl = 'ws://localhost:9000';

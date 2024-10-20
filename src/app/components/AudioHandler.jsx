@@ -1,4 +1,4 @@
-import { getWeatherPerLocationTool, getLatestNewsByCategoryTool } from './tools'
+import { getWeatherPerLocationTool, getLatestNewsByCategoryTool } from '../helper/tools'
 const mediaRecorderRef = { current: null };
 const audioChunksRef = { current: [] };
 

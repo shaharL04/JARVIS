@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useRef } from 'react';
-import { startRecording, stopRecording } from './helper/audioHandler';
-import { useWebSocket } from './helper/webSocketHandler';
+import { startRecording, stopRecording } from './components/AudioHandler';
+import { useWebSocket } from './components/WebSocketHandler';
 import { MsalProvider, useMsal, useIsAuthenticated } from '@azure/msal-react';
 import { PublicClientApplication } from '@azure/msal-browser';
 
