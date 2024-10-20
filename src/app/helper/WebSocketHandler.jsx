@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-
+import { functions } from './apiReqHandler';
 export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
   useEffect(() => {
     const backendUrl = 'ws://localhost:9000';
@@ -78,6 +78,9 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
           break;
         case 'response.audio_transcript.done':
           handleResponseAudioTranscriptDone(data, setMessages);
+          break;
+        case 'response.function_call_arguments.done':
+          handleResponseFunctionCallArgsDone(data, setMessages);
           break;
         case 'error':
           handleErrorEvent(data.error, setMessages);
@@ -262,6 +265,55 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
       { role: 'assistant', text: transcript },
     ]);
   };
+
+  const handleResponseFunctionCallArgsDone = (data, setMessages) => {
+    const functionName = data.name;
+
+    let functionArguments;
+    try {
+        functionArguments = JSON.parse(data.arguments);
+    } catch (e) {
+        console.error("Error parsing function arguments:", e);
+        return; // Exit if parsing fails
+    }
+
+    if (typeof functions[functionName] !== "function") {
+        console.error(`Function ${functionName} is not defined.`);
+        return;
+    }
+
+    functions[functionName](functionArguments)
+        .then((result) => {
+            const functionOutputEvent = {
+                type: "conversation.item.create",
+                item: {
+                    type: "function_call_output",
+                    role: "system",
+                    output: JSON.stringify(result, null, 2)
+                }
+            };
+
+            // Send the function output event
+            try {
+                wsRef.current.send(JSON.stringify(functionOutputEvent));
+                console.log("Function output event sent successfully.");
+            } catch (error) {
+                console.error("Error sending function output event:", error);
+            }
+
+            // Request another response from the LLM after sending result
+            try {
+                wsRef.current.send(JSON.stringify({ type: "response.create" }));
+                console.log("Response.create event sent successfully.");
+            } catch (error) {
+                console.error("Error sending response.create event:", error);
+            }
+        })
+        .catch((error) => {
+            console.error("Error executing function:", error);
+        });
+};
+
 
   const handleErrorEvent = (error, setMessages) => {
     console.error('Error from server:', error);
