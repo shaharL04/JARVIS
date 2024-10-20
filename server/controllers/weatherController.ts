@@ -3,9 +3,9 @@ import weather from '../api/weather.js';
 
 class weatherController{
     async getWheatherPerLocation(req: Request, res: Response) {
-        console.log(req.body)
+          const location = req.query.location as string;
           try{
-            const weatherForLocation = await weather.getWheatherPerLocation("test")
+            const weatherForLocation = await weather.getWheatherPerLocation(location)
             res.status(201).json(weatherForLocation);
           }catch(error){
             console.log('error getting all users:', error);

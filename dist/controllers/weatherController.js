@@ -1,9 +1,9 @@
 import weather from '../api/weather.js';
 class weatherController {
     async getWheatherPerLocation(req, res) {
-        console.log(req.body);
+        const location = req.query.location;
         try {
-            const weatherForLocation = await weather.getWheatherPerLocation("test");
+            const weatherForLocation = await weather.getWheatherPerLocation(location);
             res.status(201).json(weatherForLocation);
         }
         catch (error) {

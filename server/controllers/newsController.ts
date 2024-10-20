@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import news from '../api/news.js'
 class newsController{
     async getLatestNewsByCategory(req: Request, res: Response) {
-        console.log(req.body)
+          const category = req.query.category as string;
           try{
-            const latestNews = await news.getLatestNewsByCategory("test")
+            const latestNews = await news.getLatestNewsByCategory(category)
             res.status(201).json(latestNews);
           }catch(error){
             console.log('error getting all users:', error);

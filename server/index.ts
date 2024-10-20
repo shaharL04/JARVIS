@@ -1,5 +1,6 @@
 import express from 'express';
 import { WebSocketServer } from 'ws';
+import cors from 'cors'
 import router from './routes/index.js'
 import { handleClientWebSocket } from './ws/clientWs.js';
 import { connectToOpenAiWebSocket } from './ws/openAiWs.js';
@@ -8,6 +9,11 @@ import { connectToOpenAiWebSocket } from './ws/openAiWs.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(cors({
+    origin: 'http://localhost:3000', // Only allow requests from this origin
+  }));
+
+  
 app.use('/', router);
 
 // Start the Express server

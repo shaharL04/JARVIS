@@ -1,9 +1,9 @@
 import news from '../api/news.js';
 class newsController {
     async getLatestNewsByCategory(req, res) {
-        console.log(req.body);
+        const category = req.query.category;
         try {
-            const latestNews = await news.getLatestNewsByCategory("test");
+            const latestNews = await news.getLatestNewsByCategory(category);
             res.status(201).json(latestNews);
         }
         catch (error) {
