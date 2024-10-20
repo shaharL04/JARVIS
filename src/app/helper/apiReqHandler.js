@@ -15,5 +15,9 @@ export const functions = {
         }
       });
       return newsData
+    },
+    create_event: async(args) => {
+      const createEvent = await axios.post("http://localhost:5000/createNewEvent", )
+      return createEvent
     }
   };

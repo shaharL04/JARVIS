@@ -2,8 +2,8 @@
 import React, { useState, useRef } from 'react';
 import { startRecording, stopRecording } from './components/AudioHandler';
 import { useWebSocket } from './components/WebSocketHandler';
-import { MsalProvider, useMsal, useIsAuthenticated } from '@azure/msal-react';
-import { PublicClientApplication } from '@azure/msal-browser';
+import {useMsal, useIsAuthenticated } from '@azure/msal-react';
+import './app.css'
 
 const scopes = [
   'Mail.Read',
@@ -46,7 +46,20 @@ function App() {
   return (
       
       <div className="App">
-        {!isAuthenticated && <button onClick={handleLogin}>Login with Outlook</button>}
+        {!isAuthenticated && 
+          <div className='entryAuthPage'>
+              <div className='welcomeText'>
+              Welcome, I am JARVIS. 
+              <br/>
+              <br/>
+               Your personal AI assistant
+              </div>
+              <button onClick={handleLogin} className='signInBtn'>
+              <img src="/microsoft.png" alt="microsoft" className='microsoftPhoto'/>
+                Sign in with Microsoft
+                </button>
+          </div>
+        }
         {isAuthenticated && (
           <>
           <h1>OpenAI Realtime API Demo</h1>
