@@ -7,5 +7,6 @@ const router = Router();
 router.get('/getWeatherPerLocation', weatherController.getWheatherPerLocation);
 router.get('/getLatestNewsByCategory', newsController.getLatestNewsByCategory);
 router.post('/createNewEvent', verifyToken, mailEventsController.createEvent);
+router.post('/sendNewEmail', verifyToken, mailEventsController.sendEmail);
 export default router;
 //# sourceMappingURL=index.js.map

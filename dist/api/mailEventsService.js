@@ -23,6 +23,28 @@ class mailEventsService {
                 }
             }
         };
+        this.sendEmail = async (emailData, accessToken) => {
+            console.log("this is event data and token: " + JSON.stringify(emailData), accessToken);
+            try {
+                const graphResponse = await axios.post('https://graph.microsoft.com/v1.0/me/sendMail', emailData, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+                console.log(graphResponse.data);
+                return graphResponse.data;
+            }
+            catch (error) {
+                if (error.response) {
+                    console.error("Error creating event:", error.response.data);
+                    console.error("Status Code:", error.response.status);
+                    console.error("Error Headers:", error.response.headers);
+                }
+                else {
+                    console.error("Error creating event:", error.message);
+                }
+            }
+        };
     }
 }
 export default new mailEventsService();
