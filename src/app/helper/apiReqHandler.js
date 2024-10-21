@@ -16,8 +16,45 @@ export const functions = {
       });
       return newsData
     },
+
     create_event: async(args) => {
-      const createEvent = await axios.post("http://localhost:5000/createNewEvent", )
-      return createEvent
+
+      const exampleData = {
+        subject: "Test Meeting",
+        start: {
+            dateTime: "2024-10-21T09:00:00", 
+            timeZone: "UTC"
+        },
+        end: {
+            dateTime: "2024-10-21T10:30:00",
+            timeZone: "UTC"
+        },
+        attendees: [
+            {
+                emailAddress: {
+                    address: "shaharliba9@gmail.com"
+                },
+                type: "required"
+            }
+        ]
+    };
+    
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (accessToken) {
+          const response = await axios.post("http://localhost:5000/createNewEvent", {
+            eventData: exampleData,
+          }, {
+              headers: {
+                  Authorization: `Bearer ${accessToken}`, // Send the token in the Authorization header
+              },
+          });
+        }
+    
+        console.log('Event created:', response.data);
+      } catch (error) {
+        console.error('Error creating event:', error);
+      }
     }
   };

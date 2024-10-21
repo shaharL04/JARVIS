@@ -3,15 +3,11 @@ import React, { useState, useRef } from 'react';
 import { startRecording, stopRecording } from './components/AudioHandler';
 import { useWebSocket } from './components/WebSocketHandler';
 import {useMsal, useIsAuthenticated } from '@azure/msal-react';
+import { functions } from './helper/apiReqHandler';
+import { loginRequest } from './helper/authProvider';
 import './app.css'
 
-const scopes = [
-  'Mail.Read',
-  'Mail.Send',
-  'Calendars.Read',
-  'Calendars.ReadWrite',
-  'User.Read'
-];
+
 
 
 function App() {
@@ -24,11 +20,15 @@ function App() {
   const isAuthenticated = useIsAuthenticated();
   const [email, setEmail] = useState({ subject: '', body: '', to: '' });
 
-  const handleLogin = () => {
-    instance.loginPopup({ scopes }).then(response => {
-      console.log('Access token:', response.accessToken);
-      // The user is now authenticated
-    });
+  const handleLogin = async () => {
+    try {
+      const loginResponse = await instance.loginPopup(loginRequest);
+      console.log("Login successful:", loginResponse);
+      const token = loginResponse.accessToken;
+      localStorage.setItem('accessToken', token);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   useWebSocket(setMessages, audioPlayerRef, wsRef);
@@ -61,28 +61,32 @@ function App() {
           </div>
         }
         {isAuthenticated && (
-          <>
-          <h1>OpenAI Realtime API Demo</h1>
-          <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
-          </button>
+          <div className='realtime-api-wrapper-div'>
+            <div className="realtime-api-demo">
+              <h1>OpenAI Realtime API Demo</h1>
+              
+              <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
+                {isRecording ? 'Stop Recording' : 'Start Recording'}
+              </button>
+              <button onClick={() => functions.create_event("test")}>press meeeeee</button>
+              <div id="status">{isRecording ? 'Recording...' : 'Idle'}</div>
 
-          <div id="status">{isRecording ? 'Recording...' : 'Idle'}</div>
-
-          <div className="messages">
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`message ${msg.role}`}>
-                {msg.text && <p>{msg.text}</p>}
-                {msg.audio && (
-                  <audio controls src={`data:audio/wav;base64,${msg.audio}`} />
-                )}
+              <div className="messages">
+                {messages.map((msg, idx) => (
+                  <div key={idx} className={`message ${msg.role}`}>
+                    {msg.text && <p>{msg.text}</p>}
+                    {msg.audio && (
+                      <audio controls src={`data:audio/wav;base64,${msg.audio}`} />
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          <audio ref={audioPlayerRef} style={{ display: 'none' }} />
-          </>
+              <audio ref={audioPlayerRef} style={{ display: 'none' }} />
+            </div>
+          </div>
         )}
+
       </div>
   );
 }
