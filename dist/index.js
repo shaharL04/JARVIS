@@ -1,16 +1,14 @@
 import express from 'express';
 import { WebSocketServer } from 'ws';
-import cors from 'cors';
+import corsMiddleware from './middlewares/corsMiddleware.js';
 import router from './routes/index.js';
 import { handleClientWebSocket } from './ws/clientWs.js';
 import { connectToOpenAiWebSocket } from './ws/openAiWs.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.use(cors({
-    origin: 'http://localhost:3000', // Only allow requests from this origin
-}));
+app.use(express.json());
+app.use(corsMiddleware);
 app.use('/', router);
-// Start the Express server
 app.listen(PORT, async () => {
     console.log(`Server is listening on port ${PORT}`);
 });

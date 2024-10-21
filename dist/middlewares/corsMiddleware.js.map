@@ -1,0 +1,1 @@
+{"version":3,"file":"corsMiddleware.js","sourceRoot":"","sources":["../../server/middlewares/corsMiddleware.ts"],"names":[],"mappings":"AAAA,OAAO,IAAI,MAAM,MAAM,CAAC;AAExB,yBAAyB;AACzB,MAAM,WAAW,GAAG;IAClB,MAAM,EAAE,uBAAuB;IAC/B,WAAW,EAAE,IAAI;CAClB,CAAC;AAEF,MAAM,cAAc,GAAG,IAAI,CAAC,WAAW,CAAC,CAAC;AACzC,eAAe,cAAc,CAAA"}
