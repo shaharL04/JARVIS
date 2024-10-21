@@ -17,6 +17,60 @@ export const functions = {
       return newsData
     },
 
+    send_email: async(args) => {
+
+      const emailData = {
+        message: {
+            subject: "Hello from Microsoft Graph",
+            body: {
+                contentType: "Text", // or "HTML"
+                content: "This is a test email sent using Microsoft Graph API."
+            },
+            toRecipients: [
+                {
+                    emailAddress: {
+                        address: "shaharliba9@gmail.com" // Replace with the recipient's email
+                    }
+                }
+            ],
+            ccRecipients: [
+                {
+                    emailAddress: {
+                        address: "shaharliba10@gmail.com" // Optional: Replace with CC email
+                    }
+                }
+            ],
+            attachments: [
+                {
+                    "@odata.type": "#microsoft.graph.fileAttachment",
+                    name: "hello_world.txt", // Replace with the name of the attachment
+                    contentBytes: "aGVsbG8gd29ybGQh" // Base64-encoded content of the file
+                }
+            ]
+        },
+        saveToSentItems: "true" // or "false" to not save the sent email
+    };
+
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (accessToken) {
+          const response = await axios.post("http://localhost:5000/sendNewEmail", {
+            emailData: emailData,
+          }, {
+              headers: {
+                  Authorization: `Bearer ${accessToken}`, // Send the token in the Authorization header
+              },
+          });
+          console.log('email created:', response.data);
+        }
+    
+        
+      } catch (error) {
+        console.error('Error creating event:', error);
+      }
+    },
+
     create_event: async(args) => {
 
       const exampleData = {
@@ -38,7 +92,7 @@ export const functions = {
             }
         ]
     };
-    
+
       try {
         const accessToken = localStorage.getItem('accessToken');
 
@@ -50,9 +104,10 @@ export const functions = {
                   Authorization: `Bearer ${accessToken}`, // Send the token in the Authorization header
               },
           });
+          console.log('Event created:', response.data);
         }
     
-        console.log('Event created:', response.data);
+        
       } catch (error) {
         console.error('Error creating event:', error);
       }

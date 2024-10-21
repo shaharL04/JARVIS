@@ -68,7 +68,7 @@ function App() {
               <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
                 {isRecording ? 'Stop Recording' : 'Start Recording'}
               </button>
-              <button onClick={() => functions.create_event("test")}>press meeeeee</button>
+              <button onClick={() => functions.send_email("test")}>press meeeeee</button>
               <div id="status">{isRecording ? 'Recording...' : 'Idle'}</div>
 
               <div className="messages">
