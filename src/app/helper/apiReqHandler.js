@@ -71,6 +71,7 @@ export const functions = {
       }
     },
 
+
     create_event: async(args) => {
 
       const exampleData = {
@@ -111,5 +112,28 @@ export const functions = {
       } catch (error) {
         console.error('Error creating event:', error);
       }
+    },
+
+    convert_one_currency_to_another: async(args) => {
+
+      const exampleData = {
+        base_currency: "THB",
+        amount: 1,
+        target_currency: "USD"
+      };
+
+      try {
+
+          const response = await axios.get("http://localhost:5000/convertTwoCurrencies", {
+            params: {
+              currenciesData: exampleData
+            }
+          });
+          console.log('currencies: ', response.data);
+        
+      } catch (error) {
+        console.error('Error creating event:', error);
+      }
+
     }
   };
