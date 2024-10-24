@@ -114,6 +114,34 @@ export const functions = {
       }
     },
 
+
+    get_events_on_certain_dates: async(args) => {
+
+      const exampleData = {
+        "startDate": "2024-10-21T00:00:00",
+        "endDate": "2024-10-26T23:59:59"
+      };
+
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (accessToken) {
+          const response = await axios.post("http://localhost:5000/getEventsOnCertainDates", {
+            eventDatesData: exampleData,
+          }, {
+              headers: {
+                  Authorization: `Bearer ${accessToken}`, // Send the token in the Authorization header
+              },
+          });
+          console.log('got the following events back:', response.data);
+        }
+    
+        
+      } catch (error) {
+        console.error('Error creating event:', error);
+      }
+    },
+
     convert_one_currency_to_another: async(args) => {
 
       const exampleData = {

@@ -95,6 +95,29 @@ const createEvent = {
   }
 };
 
+
+const getEventsOnCertainDates = {
+  type: "function",
+  name: "get_events_on_certain_dates",
+  description: "This function retrieves calendar events occurring between specified dates. It should be invoked when a user asks to view events within a certain date range, such as by saying, 'Can you show me the events from...'.",
+  parameters: {
+    type: "object",
+    properties: {
+      startDate: {
+        type: "string",
+        description: "The start date in ISO 8601 format (e.g., '2024-10-21T00:00:00'). This specifies the beginning of the date range to retrieve events from."
+      },
+      endDate: {
+        type: "string",
+        description: "The end date in ISO 8601 format (e.g., '2024-10-21T23:59:59'). This specifies the end of the date range to retrieve events."
+      }
+    },
+    required: ["startDate", "endDate"]
+  }
+};
+
+
+
 const convertOneCurrencyToAnother = {
   type: "function",
   name: "convert_one_currency_to_another",
@@ -117,4 +140,4 @@ const convertOneCurrencyToAnother = {
 };
 
 
-export { getWeatherPerLocationTool,getLatestNewsByCategoryTool, sendEmail,createEvent, convertOneCurrencyToAnother };
+export { getWeatherPerLocationTool,getLatestNewsByCategoryTool,getEventsOnCertainDates, sendEmail,createEvent, convertOneCurrencyToAnother };

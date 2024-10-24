@@ -68,7 +68,7 @@ function App() {
               <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
                 {isRecording ? 'Stop Recording' : 'Start Recording'}
               </button>
-              <button onClick={() => functions.convert_one_currency_to_another("test")}>press meeeeee</button>
+              <button onClick={() => functions.get_events_on_certain_dates("test")}>press meeeeee</button>
               <div id="status">{isRecording ? 'Recording...' : 'Idle'}</div>
 
               <div className="messages">
