@@ -36,6 +36,25 @@ class mailEventsController {
             res.status(500).json({ message: 'An error occurred while getting all users.', type: "error" });
         }
     }
+    async getEventsOnCertainDates(req, res) {
+        const { eventDatesData } = req.body;
+        const startDate = eventDatesData.startDate;
+        const endDate = eventDatesData.endDate;
+        if (!eventDatesData) {
+            res.status(400).json({ error: 'dates data is required' });
+            return;
+        }
+        try {
+            const accessToken = req.headers.authorization?.split(' ')[1];
+            console.log(eventDatesData, accessToken);
+            const getEventsOnDates = await mailEventsService.getEventsOnCertainDates(startDate, endDate, accessToken);
+            res.status(201).json(getEventsOnDates);
+        }
+        catch (error) {
+            console.log('error getting all users:', error);
+            res.status(500).json({ message: 'An error occurred while getting all users.', type: "error" });
+        }
+    }
 }
 export default new mailEventsController;
 //# sourceMappingURL=mailEventsController.js.map

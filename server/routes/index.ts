@@ -13,6 +13,7 @@ router.get('/convertTwoCurrencies', financeController.convertTwoCurrencies)
 
 
 router.post('/createNewEvent',verifyToken , mailEventsController.createEvent )
+router.post('/getEventsOnCertainDates',verifyToken , mailEventsController.getEventsOnCertainDates )
 router.post('/sendNewEmail',verifyToken , mailEventsController.sendEmail )
 
 

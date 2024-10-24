@@ -42,5 +42,26 @@ class mailEventsService{
             }
         }
     }
+
+    getEventsOnCertainDates = async(startDate :string, endDate: string, accessToken: any) => {
+        const url = `https://graph.microsoft.com/v1.0/me/calendarview?startDateTime=${startDate}&endDateTime=${endDate}`;
+        try{
+            const graphResponse = await axios.get(url, {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              });
+            console.log("those are the events I have on the dates: "+graphResponse.data)
+            return graphResponse.data
+        }catch(error:any){
+            if (error.response) {
+                console.error("Error creating event:", error.response.data);
+                console.error("Status Code:", error.response.status);
+                console.error("Error Headers:", error.response.headers);
+            } else {
+                console.error("Error creating event:", error.message);
+            }
+        }
+    }
 }
 export default new mailEventsService()
