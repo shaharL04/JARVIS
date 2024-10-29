@@ -1,6 +1,5 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import {AuthProvider} from "./helper/authProvider";
 
 
 
@@ -13,9 +12,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
+
           {children}
-        </AuthProvider>
+
       </body>
     </html>
   );

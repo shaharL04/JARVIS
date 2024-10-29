@@ -6,6 +6,7 @@ export const functions = {
           location: args.location
         }
       });
+      console.log("weather data: "+weatherData)
       return weatherData;
     },
     get_latest_news_by_category: async (args) => {
@@ -17,7 +18,30 @@ export const functions = {
       return newsData
     },
 
-    send_email: async(args) => {
+    convert_one_currency_to_another: async(args) => {
+
+      const exampleData = {
+        base_currency: "THB",
+        amount: 1,
+        target_currency: "USD"
+      };
+
+      try {
+
+          const response = await axios.get("http://localhost:5000/convertTwoCurrencies", {
+            params: {
+              currenciesData: exampleData
+            }
+          });
+          console.log('currencies: ', response.data);
+        
+      } catch (error) {
+        console.error('Error creating event:', error);
+      }
+
+    },
+
+    send_outlook_email: async(args) => {
 
       const emailData = {
         message: {
@@ -44,35 +68,31 @@ export const functions = {
                 {
                     "@odata.type": "#microsoft.graph.fileAttachment",
                     name: "hello_world.txt", // Replace with the name of the attachment
-                    contentBytes: "aGVsbG8gd29ybGQh" // Base64-encoded content of the file
+                    contentBytes: "aGVsbG8gd29ybGQh"
                 }
             ]
         },
-        saveToSentItems: "true" // or "false" to not save the sent email
+        saveToSentItems: "true"
     };
 
-      try {
-        const accessToken = localStorage.getItem('accessToken');
 
-        if (accessToken) {
-          const response = await axios.post("http://localhost:5000/sendNewEmail", {
-            emailData: emailData,
-          }, {
-              headers: {
-                  Authorization: `Bearer ${accessToken}`, // Send the token in the Authorization header
-              },
-          });
-          console.log('email created:', response.data);
-        }
-    
-        
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/sendOutlookEmail",
+          {emailData: emailData}, 
+          {
+            withCredentials: true, 
+          }
+        );
+      
+        console.log(response.data); 
       } catch (error) {
-        console.error('Error creating event:', error);
+        console.error('Error fetching events:', error.response?.data || error.message);
       }
     },
 
 
-    create_event: async(args) => {
+    create_outlook_event: async(args) => {
 
       const exampleData = {
         subject: "Test Meeting",
@@ -94,74 +114,141 @@ export const functions = {
         ]
     };
 
-      try {
-        const accessToken = localStorage.getItem('accessToken');
 
-        if (accessToken) {
-          const response = await axios.post("http://localhost:5000/createNewEvent", {
-            eventData: exampleData,
-          }, {
-              headers: {
-                  Authorization: `Bearer ${accessToken}`, // Send the token in the Authorization header
-              },
-          });
-          console.log('Event created:', response.data);
-        }
-    
-        
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/createOutlookEvent",
+          {eventData: exampleData}, // Send the exampleData as the request body
+          {
+            withCredentials: true, // Include cookies in the request
+          }
+        );
+      
+        console.log(response.data); // Handle the response data
       } catch (error) {
-        console.error('Error creating event:', error);
+        console.error('Error fetching events:', error.response?.data || error.message);
       }
     },
 
 
-    get_events_on_certain_dates: async(args) => {
+    get_outlook_events_on_certain_dates: async(args) => {
 
       const exampleData = {
         "startDate": "2024-10-21T00:00:00",
         "endDate": "2024-10-26T23:59:59"
       };
 
-      try {
-        const accessToken = localStorage.getItem('accessToken');
 
-        if (accessToken) {
-          const response = await axios.post("http://localhost:5000/getEventsOnCertainDates", {
-            eventDatesData: exampleData,
-          }, {
-              headers: {
-                  Authorization: `Bearer ${accessToken}`, // Send the token in the Authorization header
-              },
-          });
-          console.log('got the following events back:', response.data);
+        try {
+          const response = await axios.post(
+            "http://localhost:5000/getOutlookEventsOnCertainDates",
+            exampleData, // Send the exampleData as the request body
+            {
+              withCredentials: true, // Include cookies in the request
+            }
+          );
+        
+          console.log(response.data); // Handle the response data
+        } catch (error) {
+          console.error('Error fetching events:', error.response?.data || error.message);
         }
     
-        
-      } catch (error) {
-        console.error('Error creating event:', error);
-      }
     },
 
-    convert_one_currency_to_another: async(args) => {
-
-      const exampleData = {
-        base_currency: "THB",
-        amount: 1,
-        target_currency: "USD"
-      };
-
-      try {
-
-          const response = await axios.get("http://localhost:5000/convertTwoCurrencies", {
-            params: {
-              currenciesData: exampleData
+    send_google_email: async (args) => {
+      const emailData = {
+        message: {
+          subject: "Hello from Google API",
+          body: {
+            contentType: "Text", // or "HTML"
+            content: "This is a test email sent using Google Gmail API."
+          },
+          toRecipients: [
+            {
+              emailAddress: {
+                address: "shaharliba9@gmail.com" // Replace with the recipient's email
+              }
             }
-          });
-          console.log('currencies: ', response.data);
-        
+          ],
+          ccRecipients: [
+            {
+              emailAddress: {
+                address: "shaharliba10@gmail.com" // Optional: Replace with CC email
+              }
+            }
+          ],
+          attachments: [
+            {
+              filename: "hello_world.txt", // Replace with the name of the attachment
+              data: "aGVsbG8gd29ybGQh" // Base64 encoded file content
+            }
+          ]
+        }
+      };
+    
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/sendGoogleEmail",
+          { emailData: emailData },
+          { withCredentials: true }
+        );
+    
+        console.log(response.data);
       } catch (error) {
-        console.error('Error creating event:', error);
+        console.error('Error sending email:', error.response?.data || error.message);
       }
+    },
+    
+    create_google_event: async (args) => {
+      const exampleData = {
+        summary: "Testi Meeting",
+        start: {
+          dateTime: "2024-10-30T09:00:00Z",
+          timeZone: "UTC"
+        },
+        end: {
+          dateTime: "2024-10-31T10:30:00Z",
+          timeZone: "UTC"
+        },
+        attendees: [
+          {
+            email: "shaharliba9@gmail.com"
+          }
+        ]
+      };
+    
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/createGoogleEvent",
+          { eventData: exampleData },
+          { withCredentials: true }
+        );
+    
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error creating event:', error.response?.data || error.message);
+      }
+    },
+    
+    get_google_events_on_certain_dates: async (args) => {
+      const exampleData = {
+        startDate: "2024-10-28T00:00:00Z",
+        endDate: "2024-10-28T23:59:59Z"
+      };
+    
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/getGoogleEventsOnCertainDates",
+          exampleData,
+          { withCredentials: true }
+        );
+    
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching events:', error.response?.data || error.message);
+      }
+    },
+    
 
-    }
+    
   };
