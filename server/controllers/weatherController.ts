@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import weather from '../api/weather.js';
+import weather from '../services/weather.js';
 
 class weatherController{
     async getWheatherPerLocation(req: Request, res: Response) {

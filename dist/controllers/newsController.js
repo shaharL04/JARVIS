@@ -1,4 +1,4 @@
-import news from '../api/news.js';
+import news from '../services/news.js';
 class newsController {
     async getLatestNewsByCategory(req, res) {
         const category = req.query.category;

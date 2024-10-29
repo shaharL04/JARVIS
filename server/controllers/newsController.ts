@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import news from '../api/news.js'
+import news from '../services/news.js'
 class newsController{
     async getLatestNewsByCategory(req: Request, res: Response) {
           const category = req.query.category as string;

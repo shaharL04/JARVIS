@@ -1,4 +1,4 @@
-import weather from '../api/weather.js';
+import weather from '../services/weather.js';
 class weatherController {
     async getWheatherPerLocation(req, res) {
         const location = req.query.location;

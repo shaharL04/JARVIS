@@ -4,10 +4,19 @@ import corsMiddleware from './middlewares/corsMiddleware.js';
 import router from './routes/index.js';
 import { handleClientWebSocket } from './ws/clientWs.js';
 import { connectToOpenAiWebSocket } from './ws/openAiWs.js';
+import session from 'express-session';
+import bodyParser from 'body-parser';
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(corsMiddleware);
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'default_secret', // Use a secure secret
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 86400000 } // Secure: true for HTTPS
+}));
 app.use('/', router);
 app.listen(PORT, async () => {
     console.log(`Server is listening on port ${PORT}`);

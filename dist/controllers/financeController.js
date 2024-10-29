@@ -1,4 +1,4 @@
-import financeService from '../api/financeService.js';
+import financeService from '../services/financeService.js';
 class financeController {
     async convertTwoCurrencies(req, res) {
         const currenciesData = req.query.currenciesData;

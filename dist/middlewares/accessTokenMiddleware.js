@@ -1,9 +1,6 @@
 import axios from 'axios';
 const verifyToken = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log("TOKENNN" + token);
-    // Check if the token is provided
+    const token = req.session.accessToken;
     if (!token) {
         res.status(400).json({ error: 'Token is required' });
         return;
@@ -12,13 +9,12 @@ const verifyToken = async (req, res, next) => {
         // Validate the token by making a request to Microsoft Graph API
         const response = await axios.get(`https://graph.microsoft.com/v1.0/me`, {
             headers: {
-                Authorization: `Bearer ${token}`, // Use the provided token for validation
+                Authorization: `Bearer ${token}`,
             },
         });
-        // Attach user info to the request object if needed
-        req.user = response.data; // Attach user information to the request
+        req.user = response.data;
         console.log("response data: " + JSON.stringify(response.data));
-        next(); // Proceed to the next middleware or route handler
+        next();
     }
     catch (error) {
         res.status(401).send('Invalid access token');

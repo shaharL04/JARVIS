@@ -1,4 +1,4 @@
-import mailEventsService from '../api/mailEventsService.js';
+import mailEventsService from '../services/outlookService.js';
 class mailEventsController {
     async createEvent(req, res) {
         const { eventData } = req.body; // Extract eventData from the request body
@@ -8,8 +8,7 @@ class mailEventsController {
             return;
         }
         try {
-            const accessToken = req.headers.authorization?.split(' ')[1];
-            console.log(eventData, accessToken);
+            const accessToken = req.session.accessToken;
             const createNewEvent = await mailEventsService.createEvent(eventData, accessToken);
             res.status(201).json(createNewEvent);
         }
@@ -26,7 +25,7 @@ class mailEventsController {
             return;
         }
         try {
-            const accessToken = req.headers.authorization?.split(' ')[1];
+            const accessToken = req.session.accessToken;
             console.log(emailData, accessToken);
             const sendNewEmail = await mailEventsService.sendEmail(emailData, accessToken);
             res.status(201).json(sendNewEmail);
@@ -37,16 +36,9 @@ class mailEventsController {
         }
     }
     async getEventsOnCertainDates(req, res) {
-        const { eventDatesData } = req.body;
-        const startDate = eventDatesData.startDate;
-        const endDate = eventDatesData.endDate;
-        if (!eventDatesData) {
-            res.status(400).json({ error: 'dates data is required' });
-            return;
-        }
+        const { startDate, endDate } = req.body;
         try {
-            const accessToken = req.headers.authorization?.split(' ')[1];
-            console.log(eventDatesData, accessToken);
+            const accessToken = req.session.accessToken;
             const getEventsOnDates = await mailEventsService.getEventsOnCertainDates(startDate, endDate, accessToken);
             res.status(201).json(getEventsOnDates);
         }
