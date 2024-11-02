@@ -6,6 +6,7 @@ import { handleClientWebSocket } from './ws/clientWs.js';
 import { connectToOpenAiWebSocket } from './ws/openAiWs.js';
 import session from 'express-session';
 import bodyParser from 'body-parser';
+import { connectRedis } from './config/redisClient.js';
 
 
 const app = express();
@@ -26,9 +27,15 @@ app.use('/', router);
 
 
 
-app.listen(PORT, async () => {
-    console.log(`Server is listening on port ${PORT}`);
-});
+async function startServer() {
+    await connectRedis(); 
+
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+  }
+
+  startServer();
 
 // WebSocket server for handling audio from the frontend
 const wss = new WebSocketServer({ port: 9000 });

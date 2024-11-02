@@ -4,6 +4,7 @@ import weatherController from '../controllers/weatherController.js';
 import outlookController from '../controllers/outlookController.js';
 import googleController from '../controllers/googleController.js';
 import financeController from '../controllers/financeController.js';
+import verifyJwtMiddleware from '../middlewares/jwtMiddleware.js';
 import verifyOutlookTokenMiddleware from '../middlewares/verifyOutlookTokenMiddleware.js';
 import verifyGoogleTokenMiddleware from '../middlewares/verifyGoogleTokenMiddleware.js';
 import microsoftAuthRouter from '../auth/microsoft/microsoftAuthRouter.js';
@@ -16,14 +17,14 @@ router.get('/getLatestNewsByCategory', newsController.getLatestNewsByCategory )
 router.get('/convertTwoCurrencies', financeController.convertTwoCurrencies)
 
 //outlook events
-router.post('/createOutlookEvent',verifyOutlookTokenMiddleware , outlookController.createEvent )
-router.post('/getOutlookEventsOnCertainDates',verifyOutlookTokenMiddleware , outlookController.getEventsOnCertainDates )
-router.post('/sendOutlookEmail',verifyOutlookTokenMiddleware , outlookController.sendEmail )
+router.post('/createOutlookEvent', verifyJwtMiddleware ,verifyOutlookTokenMiddleware , outlookController.createEvent )
+router.post('/getOutlookEventsOnCertainDates', verifyJwtMiddleware ,verifyOutlookTokenMiddleware , outlookController.getEventsOnCertainDates )
+router.post('/sendOutlookEmail', verifyJwtMiddleware ,verifyOutlookTokenMiddleware , outlookController.sendEmail )
 
 //google events
-router.post('/createGoogleEvent',verifyGoogleTokenMiddleware , googleController.createEvent )
-router.post('/getGoogleEventsOnCertainDates',verifyGoogleTokenMiddleware , googleController.getEventsOnCertainDates )
-router.post('/sendGoogleEmail',verifyGoogleTokenMiddleware , googleController.sendEmail )
+router.post('/createGoogleEvent', verifyJwtMiddleware ,verifyGoogleTokenMiddleware , googleController.createEvent )
+router.post('/getGoogleEventsOnCertainDates', verifyJwtMiddleware ,verifyGoogleTokenMiddleware , googleController.getEventsOnCertainDates )
+router.post('/sendGoogleEmail', verifyJwtMiddleware ,verifyGoogleTokenMiddleware , googleController.sendEmail )
 
 //authentaction routes
 router.use('/auth/microsoft', microsoftAuthRouter);

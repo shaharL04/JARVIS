@@ -8,7 +8,8 @@
     "build": "tsc",
     "serve": "npm run build && npm run start",
     "client": "npm run dev --prefix ../frontend",
-    "dev": "concurrently \"npm run client\" \"tsc --watch\" \"nodemon dist/index.js\""
+    "redisDocker": "docker start redis    ",
+    "dev": "concurrently \"npm run redisDocker\" \"npm run client\" \"tsc --watch\" \"nodemon dist/index.js\""
   },
   "keywords": [],
   "author": "",

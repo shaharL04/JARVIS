@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import crypto from 'crypto';
 import qs from 'qs';
 import jwt from 'jsonwebtoken';
+import { redisClient } from '../../config/redisClient.js';
 dotenv.config();
 const microsoftAuthRouter = express.Router();
 const generateCodeVerifier = () => {
@@ -47,9 +48,20 @@ microsoftAuthRouter.get('/callback', async (req, res) => {
                 'Origin': 'http://localhost:3000',
             },
         });
-        console.log('Token exchange response:', response.data);
-        req.session.accessToken = response.data.access_token; // Store the access token in the session
-        const jwtToken = jwt.sign({ isAuth: true, account: "outlook" }, "secret", { expiresIn: '24h' });
+        console.log(response);
+        const refreshToken = response.data.refresh_token;
+        const accessToken = response.data.access_token;
+        const userInfo = await axios.get(`https://graph.microsoft.com/v1.0/me`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        console.log("userInfo: " + JSON.stringify(userInfo.data.id));
+        const userId = userInfo.data.id;
+        const expiresIn = 86400;
+        await redisClient.setEx(`refreshToken:${userId}`, expiresIn, refreshToken);
+        req.session.accessToken = accessToken;
+        const jwtToken = jwt.sign({ isAuth: true, account: "outlook", userId: userId }, "secret", { expiresIn: '24h' });
         res.redirect(`http://localhost:3000?token=${jwtToken}`);
     }
     catch (error) {

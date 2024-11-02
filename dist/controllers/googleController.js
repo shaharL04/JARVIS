@@ -8,7 +8,7 @@ class googleController {
             return;
         }
         try {
-            const accessToken = req.session.accessToken;
+            const accessToken = req.user;
             const createNewEvent = await googleServices.createEvent(eventData, accessToken);
             res.status(201).json(createNewEvent);
         }
@@ -25,7 +25,7 @@ class googleController {
             return;
         }
         try {
-            const accessToken = req.session.accessToken;
+            const accessToken = req.user;
             console.log(emailData, accessToken);
             const sendNewEmail = await googleServices.sendEmail(emailData, accessToken);
             res.status(201).json(sendNewEmail);
@@ -38,7 +38,7 @@ class googleController {
     async getEventsOnCertainDates(req, res) {
         const { startDate, endDate } = req.body;
         try {
-            const accessToken = req.session.accessToken;
+            const accessToken = req.user;
             const getEventsOnDates = await googleServices.getEventsOnCertainDates(startDate, endDate, accessToken);
             res.status(201).json(getEventsOnDates);
         }

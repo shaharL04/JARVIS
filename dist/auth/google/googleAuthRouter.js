@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import crypto from 'crypto';
 import qs from 'qs';
 import jwt from 'jsonwebtoken';
+import { redisClient } from "../../config/redisClient.js";
 dotenv.config();
 const googleAuthRouter = express.Router();
 const generateCodeVerifier = () => {
@@ -18,7 +19,7 @@ googleAuthRouter.get('/login', (req, res) => {
     const codeChallenge = generateCodeChallenge(codeVerifier);
     req.session.codeVerifier = codeVerifier;
     const state = crypto.randomBytes(16).toString('hex');
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&response_type=code&redirect_uri=${process.env.GOOGLE_REDIRECT_URI}&scope=${encodeURIComponent('openid profile email https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.compose')}&state=secureRandomState&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&response_type=code&redirect_uri=${process.env.GOOGLE_REDIRECT_URI}&scope=${encodeURIComponent('openid profile email https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.compose')}&state=secureRandomState&code_challenge=${codeChallenge}&code_challenge_method=S256&access_type=offline`;
     res.redirect(authUrl);
 });
 googleAuthRouter.get('/callback', async (req, res) => {
@@ -42,9 +43,20 @@ googleAuthRouter.get('/callback', async (req, res) => {
             code_verifier: codeVerifier,
         };
         const response = await axios.post('https://oauth2.googleapis.com/token', qs.stringify(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-        req.session.accessToken = response.data.access_token;
+        const refreshToken = response.data.refresh_token;
+        const accessToken = response.data.access_token;
+        const userInfoResponse = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const userId = userInfoResponse.data.sub;
+        // Store the access token in Redis with an expiration time
+        const expiresIn = 86400;
+        await redisClient.setEx(`refreshToken:${userId}`, expiresIn, refreshToken);
+        req.session.accessToken = accessToken;
         // After successful token exchange
-        const jwtToken = jwt.sign({ isAuth: true, account: "google" }, "secret", { expiresIn: '24h' });
+        const jwtToken = jwt.sign({ isAuth: true, account: "google", userId: userId }, "secret", { expiresIn: '24h' });
         res.redirect(`http://localhost:3000?token=${jwtToken}`); // Redirect after successful login
     }
     catch (error) {
