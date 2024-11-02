@@ -47,27 +47,27 @@ export const functions = {
         message: {
             subject: "Hello from Microsoft Graph",
             body: {
-                contentType: "Text", // or "HTML"
+                contentType: "Text", 
                 content: "This is a test email sent using Microsoft Graph API."
             },
             toRecipients: [
                 {
                     emailAddress: {
-                        address: "shaharliba9@gmail.com" // Replace with the recipient's email
+                        address: "shaharliba9@gmail.com" 
                     }
                 }
             ],
             ccRecipients: [
                 {
                     emailAddress: {
-                        address: "shaharliba10@gmail.com" // Optional: Replace with CC email
+                        address: "shaharliba10@gmail.com"
                     }
                 }
             ],
             attachments: [
                 {
                     "@odata.type": "#microsoft.graph.fileAttachment",
-                    name: "hello_world.txt", // Replace with the name of the attachment
+                    name: "hello_world.txt",
                     contentBytes: "aGVsbG8gd29ybGQh"
                 }
             ]
@@ -77,11 +77,17 @@ export const functions = {
 
 
       try {
+        const token = localStorage.getItem("jwtToken");
+
+        
         const response = await axios.post(
           "http://localhost:5000/sendOutlookEmail",
           {emailData: emailData}, 
           {
-            withCredentials: true, 
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+            withCredentials: true,
           }
         );
       
@@ -116,15 +122,21 @@ export const functions = {
 
 
       try {
+        const token = localStorage.getItem("jwtToken");
+
+
         const response = await axios.post(
           "http://localhost:5000/createOutlookEvent",
-          {eventData: exampleData}, // Send the exampleData as the request body
+          {eventData: exampleData}, 
           {
-            withCredentials: true, // Include cookies in the request
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+            withCredentials: true,
           }
         );
       
-        console.log(response.data); // Handle the response data
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching events:', error.response?.data || error.message);
       }
@@ -140,15 +152,21 @@ export const functions = {
 
 
         try {
+          const token = localStorage.getItem("jwtToken");
+
+
           const response = await axios.post(
             "http://localhost:5000/getOutlookEventsOnCertainDates",
-            exampleData, // Send the exampleData as the request body
+            exampleData, 
             {
-              withCredentials: true, // Include cookies in the request
+              headers: {
+                Authorization: `Bearer ${token}`, 
+              },
+              withCredentials: true,
             }
           );
         
-          console.log(response.data); // Handle the response data
+          console.log(response.data);
         } catch (error) {
           console.error('Error fetching events:', error.response?.data || error.message);
         }
@@ -160,37 +178,44 @@ export const functions = {
         message: {
           subject: "Hello from Google API",
           body: {
-            contentType: "Text", // or "HTML"
+            contentType: "Text", 
             content: "This is a test email sent using Google Gmail API."
           },
           toRecipients: [
             {
               emailAddress: {
-                address: "shaharliba9@gmail.com" // Replace with the recipient's email
+                address: "shaharliba9@gmail.com"
               }
             }
           ],
           ccRecipients: [
             {
               emailAddress: {
-                address: "shaharliba10@gmail.com" // Optional: Replace with CC email
+                address: "shaharliba10@gmail.com"
               }
             }
           ],
           attachments: [
             {
-              filename: "hello_world.txt", // Replace with the name of the attachment
-              data: "aGVsbG8gd29ybGQh" // Base64 encoded file content
+              filename: "hello_world.txt",
+              data: "aGVsbG8gd29ybGQh"
             }
           ]
         }
       };
     
       try {
+        const token = localStorage.getItem("jwtToken");
+
         const response = await axios.post(
           "http://localhost:5000/sendGoogleEmail",
           { emailData: emailData },
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+            withCredentials: true,
+          }
         );
     
         console.log(response.data);
@@ -218,13 +243,19 @@ export const functions = {
       };
     
       try {
+        const token = localStorage.getItem("jwtToken");
+
         const response = await axios.post(
           "http://localhost:5000/createGoogleEvent",
           { eventData: exampleData },
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+            withCredentials: true,
+          }
         );
-    
-        console.log(response.data);
+
       } catch (error) {
         console.error('Error creating event:', error.response?.data || error.message);
       }
@@ -237,10 +268,17 @@ export const functions = {
       };
     
       try {
+        const token = localStorage.getItem("jwtToken");
+
         const response = await axios.post(
           "http://localhost:5000/getGoogleEventsOnCertainDates",
           exampleData,
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+            withCredentials: true,
+          }
         );
     
         console.log(response.data);
@@ -248,7 +286,5 @@ export const functions = {
         console.error('Error fetching events:', error.response?.data || error.message);
       }
     },
-    
-
-    
+      
   };

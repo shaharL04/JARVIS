@@ -28,7 +28,7 @@ function App() {
     const token = params.get("token");
 
     if (token) {
-      localStorage.setItem("authToken", token);
+      localStorage.setItem("jwtToken", token);
       window.history.replaceState({}, document.title, "/");
 
       try {
@@ -41,7 +41,7 @@ function App() {
         console.error("Invalid token:", error);
       }
     } else {
-      const storedToken = localStorage.getItem("authToken");
+      const storedToken = localStorage.getItem("jwtToken");
       if (storedToken) {
         try {
           const decoded = jwtDecode(storedToken);
@@ -51,7 +51,7 @@ function App() {
           }
         } catch (error) {
           console.error("Invalid stored token:", error);
-          localStorage.removeItem("authToken");
+          localStorage.removeItem("jwtToken");
         }
       }
     }
@@ -107,7 +107,7 @@ function App() {
             >
               {isRecording ? "Stop Recording" : "Start Recording"}
             </button>
-            <button onClick={() => functions.create_google_event("test")}>
+            <button onClick={() => functions.send_outlook_email("test")}>
               bbrrrrrrr
             </button>
             <div id="status">{isRecording ? "Recording..." : "Idle"}</div>
