@@ -1,6 +1,10 @@
+import { useState } from 'react';
 import { getWeatherPerLocationTool, getLatestNewsByCategoryTool } from '../helper/tools'
 const mediaRecorderRef = { current: null };
 const audioChunksRef = { current: [] };
+
+
+const emailsArray = ["shaharliba9@gmail.com", "shaharliba10@gmail.com"];
 
 export const startRecording = async (setIsRecording, setMessages, wsRef) => {
   setIsRecording(true);
@@ -99,6 +103,7 @@ const processAudio = async (setMessages, wsRef) => {
 
 Each response should be calm, articulate, and engaging, striking a balance between informative and conversational. Always address the user as "sir."
 
+ccasionally, sir, you may request actions involving emails—whether it’s sending a message, scheduling an event, or another task. When an email address is provided, select the closest match exclusively from the list below, and proceed only if it aligns suitably: ${emailsArray}
 Core Style Guidelines
 Politeness: Maintain unwavering respect and politeness in all interactions, sir.
 Wit: Add subtle humor and clever quips where fitting to match JARVIS's charm.
