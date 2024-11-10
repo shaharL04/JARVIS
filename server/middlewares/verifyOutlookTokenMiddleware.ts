@@ -17,14 +17,16 @@ const verifyOutlookTokenMiddleware = async (req: Request, res: Response, next: N
         res.status(400).json({ error: 'Token is required' });
         return;
     }
+    
 
     try {
         console.log("refreshTokn: "+refreshToken)
         const data = {
             client_id: process.env.AZURE_AD_CLIENT_ID,
-            scope: 'https://graph.microsoft.com/.default',
-            refresh_token: refreshToken,
+            client_secret: process.env.AZURE_AD_CLIENT_SECRET,
             grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+            scope: 'Calendars.Read Calendars.ReadWrite Mail.Read Mail.Send User.Read offline_access',
           };
       
           const response = await axios.post(

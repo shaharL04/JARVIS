@@ -2,82 +2,81 @@ import axios from "axios";
 import base64 from 'base-64';
 
 class googleServices {
-    createEvent = async (eventData: any, accessToken: any) => {
-        console.log("This is event data and token:", JSON.stringify(eventData), accessToken);
+    // Function to create an event in Google Calendar
+    async createEvent(eventData: { title: string, startTime: string, endTime: string, location?: string, description?: string, attendees?: string[] }, accessToken: string) {
+        console.log("Creating event with data:", eventData);
+        
+        // Formatting event data as required by Google API
+        const formattedEventData = {
+            summary: eventData.title,
+            start: { dateTime: eventData.startTime },
+            end: { dateTime: eventData.endTime },
+            location: eventData.location || "",
+            description: eventData.description || "",
+            attendees: eventData.attendees?.map(email => ({ email })) || []
+        };
+
         try {
-            const response = await axios.post('https://www.googleapis.com/calendar/v3/calendars/primary/events', eventData, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
+            const response = await axios.post('https://www.googleapis.com/calendar/v3/calendars/primary/events', formattedEventData, {
+                headers: { Authorization: `Bearer ${accessToken}` }
             });
-            console.log(response.data);
+            console.log("Event created successfully:", response.data);
             return response.data;
         } catch (error: any) {
-            if (error.response) {
-                console.error("Error creating event:", error.response.data);
-                console.error("Status Code:", error.response.status);
-                console.error("Error Headers:", error.response.headers);
-            } else {
-                console.error("Error creating event:", error.message);
-            }
+            this.handleError("Error creating event", error);
         }
     }
 
-    sendEmail = async (emailData: any, accessToken: any) => {
+    // Function to send an email using Google Gmail API
+    async sendEmail(emailData: { to: string, subject: string, body: string }, accessToken: string) {
         const message = [
             `MIME-Version: 1.0`,
-            `Content-Type: ${emailData.message.body.contentType === "HTML" ? "text/html" : "text/plain"}; charset=UTF-8`,
-            `Subject: ${emailData.message.subject}`,
-            `To: ${emailData.message.toRecipients.map((r: any) => r.emailAddress.address).join(', ')}`,
-            `Cc: ${emailData.message.ccRecipients.map((r: any) => r.emailAddress.address).join(', ')}`,
+            `Content-Type: text/plain; charset=UTF-8`,
+            `Subject: ${emailData.subject}`,
+            `To: ${emailData.to}`,
             ``,
-            emailData.message.body.content
+            emailData.body
         ].join('\r\n');
-    
-        // Encoding the message to base64url format
-        const raw = base64.encode(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
+        const raw = base64.encode(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
         const payload = { raw };
 
-        console.log("This is payload:", payload);
+        console.log("Sending email with payload:", payload);
         try {
             const response = await axios.post('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', payload, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
-                }
+                headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' }
             });
-            console.log(response.data);
+            console.log("Email sent successfully:", response.data);
             return response.data;
         } catch (error: any) {
-            if (error.response) {
-                console.error("Error sending email:", error.response.data);
-                console.error("Status Code:", error.response.status);
-                console.error("Error Headers:", error.response.headers);
-            } else {
-                console.error("Error sending email:", error.message);
-            }
+            this.handleError("Error sending email", error);
         }
     }
 
-    getEventsOnCertainDates = async (startDate: string, endDate: string, accessToken: any) => {
-        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${startDate}&timeMax=${endDate}`;
+    // Function to get events within a specified date range from Google Calendar
+    async getEventsOnCertainDates(dateRange: { startDate: string, endDate: string }, accessToken: string) {
+        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${dateRange.startDate}&timeMax=${dateRange.endDate}`;
+        
+        console.log("Retrieving events from", dateRange.startDate, "to", dateRange.endDate);
         try {
             const response = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
+                headers: { Authorization: `Bearer ${accessToken}` }
             });
-            console.log("Events within date range:", response.data);
+            console.log("Retrieved events:", response.data);
             return response.data;
         } catch (error: any) {
-            if (error.response) {
-                console.error("Error retrieving events:", error.response.data);
-                console.error("Status Code:", error.response.status);
-                console.error("Error Headers:", error.response.headers);
-            } else {
-                console.error("Error retrieving events:", error.message);
-            }
+            this.handleError("Error retrieving events", error);
+        }
+    }
+
+    // Centralized error handler
+    private handleError(message: string, error: any) {
+        if (error.response) {
+            console.error(`${message}:`, error.response.data);
+            console.error("Status Code:", error.response.status);
+            console.error("Headers:", error.response.headers);
+        } else {
+            console.error(`${message}:`, error.message);
         }
     }
 }

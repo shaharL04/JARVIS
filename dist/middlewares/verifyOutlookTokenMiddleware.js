@@ -15,9 +15,10 @@ const verifyOutlookTokenMiddleware = async (req, res, next) => {
         console.log("refreshTokn: " + refreshToken);
         const data = {
             client_id: process.env.AZURE_AD_CLIENT_ID,
-            scope: 'https://graph.microsoft.com/.default',
-            refresh_token: refreshToken,
+            client_secret: process.env.AZURE_AD_CLIENT_SECRET,
             grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+            scope: 'Calendars.Read Calendars.ReadWrite Mail.Read Mail.Send User.Read offline_access',
         };
         const response = await axios.post(`https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`, qs.stringify(data), {
             headers: {
