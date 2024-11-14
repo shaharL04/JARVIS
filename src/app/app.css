@@ -64,7 +64,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    height: 95vh;
+    height: 95%;
     width: 92vw;
  }
  
@@ -102,9 +102,8 @@
    background-color: #ffffff;
    border-radius: 12px;
    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-   max-height: 60vh;
    overflow-y: auto;
-   height: 60vh;
+   height: 80%;
  }
  
  .realtime-api-demo .message {

@@ -19,7 +19,7 @@ export const functions = {
     },
 
     convert_one_currency_to_another: async(args) => {
-
+      console.log("agrs: "+JSON.stringify(args))
       const exampleData = {
         base_currency: "THB",
         amount: 1,
@@ -30,7 +30,7 @@ export const functions = {
 
           const response = await axios.get("http://localhost:5000/convertTwoCurrencies", {
             params: {
-              currenciesData: exampleData
+              currenciesData: args
             }
           });
           console.log('currencies: ', response.data);
@@ -42,7 +42,7 @@ export const functions = {
     },
 
     send_outlook_email: async(args) => {
-
+      console.log("agrs: "+JSON.stringify(args))
       const emailData = {
         message: {
             subject: "Hello from Microsoft Graph",
@@ -82,7 +82,7 @@ export const functions = {
         
         const response = await axios.post(
           "http://localhost:5000/sendOutlookEmail",
-          {emailData: emailData}, 
+          {emailData: args}, 
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -99,7 +99,8 @@ export const functions = {
 
 
     create_outlook_event: async(args) => {
-
+      console.log("agrs: "+JSON.stringify(args))
+      console.log(JSON.stringify(args))
       const exampleData = {
         subject: "Test Meeting",
         start: {
@@ -127,7 +128,7 @@ export const functions = {
 
         const response = await axios.post(
           "http://localhost:5000/createOutlookEvent",
-          {eventData: exampleData}, 
+          {eventData: args}, 
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -144,7 +145,7 @@ export const functions = {
 
 
     get_outlook_events_on_certain_dates: async(args) => {
-
+      console.log("agrs: "+JSON.stringify(args))
       const exampleData = {
         "startDate": "2024-10-21T00:00:00",
         "endDate": "2024-10-26T23:59:59"
@@ -174,6 +175,7 @@ export const functions = {
     },
 
     send_google_email: async (args) => {
+      console.log("agrs: "+JSON.stringify(args))
       const emailData = {
         message: {
           subject: "Hello from Google API",
@@ -225,6 +227,7 @@ export const functions = {
     },
     
     create_google_event: async (args) => {
+      console.log("agrs: "+JSON.stringify(args))
       const exampleData = {
         summary: "Testi Meeting",
         start: {
@@ -262,6 +265,7 @@ export const functions = {
     },
     
     get_google_events_on_certain_dates: async (args) => {
+      console.log("agrs: "+JSON.stringify(args))
       const exampleData = {
         startDate: "2024-10-28T00:00:00Z",
         endDate: "2024-10-28T23:59:59Z"

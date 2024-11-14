@@ -15,7 +15,6 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
     };
 
     ws.onmessage = (event) => {
-      console.log('Message from server:', event.data);
       try {
         let dataStr;
         if (event.data instanceof Blob) {
@@ -217,7 +216,7 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
   };
   
   const handleResponseAudioDelta = (data, setMessages, audioPlayerRef) => {
-    console.log('Handling audio delta:', data);
+
     const { delta } = data;
   
     if (delta) {

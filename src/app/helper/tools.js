@@ -35,20 +35,23 @@ const convertOneCurrencyToAnother = {
   name: "convert_one_currency_to_another",
   description: "Use this function when asked to convert between two currencies, for example, GBP to ILS.",
   parameters: {
-    base_currency: {
-      type: "string",
-      description: "The currency you want to convert from, e.g., 'GBP'."
-    },
-    amount: {
-      type: "int",
-      description: "The amount of the base currency coins you want to convert to the target currency. Defaults to 1 if not specified, but you must provide a value."
-    },
-    target_currency: {
-      type: "string",
-      description: "The currency you want to convert to, e.g., 'ILS'."
+    type: "object", // Added this line to define the structure of the parameters as an object
+    properties: {
+      base_currency: {
+        type: "string",
+        description: "The currency you want to convert from, e.g., 'GBP'."
+      },
+      amount: {
+        type: "integer", // Use 'integer' instead of 'int' for JSON schema compatibility
+        description: "The amount of the base currency coins you want to convert to the target currency. Defaults to 1 if not specified, but you must provide a value."
+      },
+      target_currency: {
+        type: "string",
+        description: "The currency you want to convert to, e.g., 'ILS'."
+      }
     },
     required: ["base_currency", "amount", "target_currency"]
-  },
+  }
 };
 
 

@@ -100,15 +100,12 @@ function App() {
       {isAuthenticated && (
         <div className="realtime-api-wrapper-div">
           <div className="realtime-api-demo">
-            <h1>OpenAI Realtime API Demo</h1>
+            <h1>JARVIS</h1>
 
             <button
               onClick={isRecording ? handleStopRecording : handleStartRecording}
             >
               {isRecording ? "Stop Recording" : "Start Recording"}
-            </button>
-            <button onClick={() => functions.send_outlook_email("test")}>
-              bbrrrrrrr
             </button>
             <div id="status">{isRecording ? "Recording..." : "Idle"}</div>
 
