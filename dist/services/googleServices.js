@@ -7,8 +7,14 @@ class googleServices {
         // Formatting event data as required by Google API
         const formattedEventData = {
             summary: eventData.title,
-            start: { dateTime: eventData.startTime },
-            end: { dateTime: eventData.endTime },
+            start: {
+                dateTime: eventData.startTime,
+                timeZone: eventData.timeZone || "UTC",
+            },
+            end: {
+                dateTime: eventData.endTime,
+                timeZone: eventData.timeZone || "UTC",
+            },
             location: eventData.location || "",
             description: eventData.description || "",
             attendees: eventData.attendees?.map(email => ({ email })) || []
@@ -49,9 +55,11 @@ class googleServices {
         }
     }
     // Function to get events within a specified date range from Google Calendar
-    async getEventsOnCertainDates(dateRange, accessToken) {
-        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${dateRange.startDate}&timeMax=${dateRange.endDate}`;
-        console.log("Retrieving events from", dateRange.startDate, "to", dateRange.endDate);
+    async getEventsOnCertainDates(startDate, endDate, accessToken) {
+        const encodedStartDate = encodeURIComponent(startDate);
+        const encodedEndDate = encodeURIComponent(endDate);
+        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodedStartDate}&timeMax=${encodedEndDate}`;
+        console.log("Retrieving events from", startDate, "to", endDate);
         try {
             const response = await axios.get(url, {
                 headers: { Authorization: `Bearer ${accessToken}` }

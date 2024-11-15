@@ -3,14 +3,20 @@ import base64 from 'base-64';
 
 class googleServices {
     // Function to create an event in Google Calendar
-    async createEvent(eventData: { title: string, startTime: string, endTime: string, location?: string, description?: string, attendees?: string[] }, accessToken: string) {
+    async createEvent(eventData: { title: string, startTime: string, endTime: string, timeZone: string, location?: string, description?: string, attendees?: string[] }, accessToken: string) {
         console.log("Creating event with data:", eventData);
         
         // Formatting event data as required by Google API
         const formattedEventData = {
             summary: eventData.title,
-            start: { dateTime: eventData.startTime },
-            end: { dateTime: eventData.endTime },
+            start: {
+                dateTime: eventData.startTime,
+                timeZone: eventData.timeZone || "UTC", 
+              },
+              end: {
+                dateTime: eventData.endTime,
+                timeZone: eventData.timeZone || "UTC", 
+              },
             location: eventData.location || "",
             description: eventData.description || "",
             attendees: eventData.attendees?.map(email => ({ email })) || []
@@ -54,10 +60,13 @@ class googleServices {
     }
 
     // Function to get events within a specified date range from Google Calendar
-    async getEventsOnCertainDates(dateRange: { startDate: string, endDate: string }, accessToken: string) {
-        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${dateRange.startDate}&timeMax=${dateRange.endDate}`;
+    async getEventsOnCertainDates(startDate: string, endDate: string , accessToken: string) {
+        const encodedStartDate = encodeURIComponent(startDate);
+        const encodedEndDate = encodeURIComponent(endDate);
+
+        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodedStartDate}&timeMax=${encodedEndDate}`;
         
-        console.log("Retrieving events from", dateRange.startDate, "to", dateRange.endDate);
+        console.log("Retrieving events from", startDate, "to", endDate);
         try {
             const response = await axios.get(url, {
                 headers: { Authorization: `Bearer ${accessToken}` }
