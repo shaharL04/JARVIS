@@ -8,7 +8,7 @@ class outlookController {
             return;
         }
         try {
-            const accessToken = req.session.accessToken;
+            const accessToken = req.user;
             const createNewEvent = await outlookService.createEvent(eventData, accessToken);
             res.status(201).json(createNewEvent);
         }
@@ -25,7 +25,7 @@ class outlookController {
             return;
         }
         try {
-            const accessToken = req.session.accessToken;
+            const accessToken = req.user;
             console.log(emailData, accessToken);
             const sendNewEmail = await outlookService.sendEmail(emailData, accessToken);
             res.status(201).json(sendNewEmail);
@@ -38,7 +38,7 @@ class outlookController {
     async getEventsOnCertainDates(req, res) {
         const { startDate, endDate } = req.body;
         try {
-            const accessToken = req.session.accessToken;
+            const accessToken = req.user;
             const getEventsOnDates = await outlookService.getEventsOnCertainDates(startDate, endDate, accessToken);
             res.status(201).json(getEventsOnDates);
         }
