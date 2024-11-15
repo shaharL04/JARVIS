@@ -158,7 +158,7 @@ export const functions = {
 
           const response = await axios.post(
             "http://localhost:5000/getOutlookEventsOnCertainDates",
-            exampleData, 
+            args, 
             {
               headers: {
                 Authorization: `Bearer ${token}`, 

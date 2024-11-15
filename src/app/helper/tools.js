@@ -58,21 +58,21 @@ const convertOneCurrencyToAnother = {
 const sendOutlookEmail = {
   type: "function",
   name: "send_outlook_email",
-  description: "This function is designed to send an email. It should be invoked when the user requests to send an email, for instance, by saying, 'Could you send an email to...'. Before executing, ensure you verify the email details with the user, such as the recipient, subject, and body content.",
+  description: "This function is designed to send an email using Microsoft Outlook. Ensure you confirm the recipient's email address, subject, and body content with the user before executing. This is critical to prevent errors or unintended communication.",
   parameters: {
     type: "object",
     properties: {
       to: {
         type: "string",
-        description: "The email address of the recipient. Ensure that this is a valid email format (e.g., user@example.com) to prevent delivery issues."
+        description: "The recipient's email address (e.g., user@example.com). Ensure the email is valid to prevent errors."
       },
       subject: {
         type: "string",
-        description: "The subject line of the email. This should summarize the content and purpose of the email succinctly."
+        description: "The subject of the email. This should briefly convey the main purpose of the email."
       },
       body: {
         type: "string",
-        description: "The main content of the email. This should convey the message you intend to send to the recipient."
+        description: "The email's content. Clearly express the intended message to the recipient."
       }
     },
     required: ["to", "subject", "body"]
