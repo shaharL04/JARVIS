@@ -176,42 +176,12 @@ export const functions = {
 
     send_google_email: async (args) => {
       console.log("agrs: "+JSON.stringify(args))
-      const emailData = {
-        message: {
-          subject: "Hello from Google API",
-          body: {
-            contentType: "Text", 
-            content: "This is a test email sent using Google Gmail API."
-          },
-          toRecipients: [
-            {
-              emailAddress: {
-                address: "shaharliba9@gmail.com"
-              }
-            }
-          ],
-          ccRecipients: [
-            {
-              emailAddress: {
-                address: "shaharliba10@gmail.com"
-              }
-            }
-          ],
-          attachments: [
-            {
-              filename: "hello_world.txt",
-              data: "aGVsbG8gd29ybGQh"
-            }
-          ]
-        }
-      };
-    
       try {
         const token = localStorage.getItem("jwtToken");
 
         const response = await axios.post(
           "http://localhost:5000/sendGoogleEmail",
-          { emailData: emailData },
+          { emailData: args },
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -228,29 +198,31 @@ export const functions = {
     
     create_google_event: async (args) => {
       console.log("agrs: "+JSON.stringify(args))
-      const exampleData = {
-        summary: "Testi Meeting",
-        start: {
-          dateTime: "2024-10-30T09:00:00Z",
-          timeZone: "UTC"
-        },
-        end: {
-          dateTime: "2024-10-31T10:30:00Z",
-          timeZone: "UTC"
-        },
-        attendees: [
-          {
-            email: "shaharliba9@gmail.com"
-          }
-        ]
+
+      const getTimeZoneOffset = (timeZone) => {
+        const now = new Date();
+        const formatter = new Intl.DateTimeFormat("en-US", {
+          timeZone,
+          timeZoneName: "short",
+        });
+        const parts = formatter.formatToParts(now);
+        const offsetPart = parts.find((part) => part.type === "timeZoneName");
+        return offsetPart.value; // "GMT+2" for example
       };
     
       try {
         const token = localStorage.getItem("jwtToken");
 
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const getUserOffsetTimeZone = getTimeZoneOffset(userTimeZone);
+
+        const updatedArgs = {
+          ...args,
+          timeZone: getUserOffsetTimeZone,
+        };
         const response = await axios.post(
           "http://localhost:5000/createGoogleEvent",
-          { eventData: exampleData },
+          { eventData: updatedArgs },
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -267,8 +239,8 @@ export const functions = {
     get_google_events_on_certain_dates: async (args) => {
       console.log("agrs: "+JSON.stringify(args))
       const exampleData = {
-        startDate: "2024-10-28T00:00:00Z",
-        endDate: "2024-10-28T23:59:59Z"
+        startDate: "2024-12-03T00:00:00Z", 
+        endDate: "2024-12-03T23:59:59Z"    
       };
     
       try {
@@ -276,7 +248,7 @@ export const functions = {
 
         const response = await axios.post(
           "http://localhost:5000/getGoogleEventsOnCertainDates",
-          exampleData,
+          args,
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -284,7 +256,7 @@ export const functions = {
             withCredentials: true,
           }
         );
-    
+        return response
         console.log(response.data);
       } catch (error) {
         console.error('Error fetching events:', error.response?.data || error.message);

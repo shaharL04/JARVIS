@@ -67,6 +67,7 @@ function App() {
     stopRecording(setIsRecording);
   };
 
+
   return (
     <div className="App">
       {!isAuthenticated && (
@@ -101,7 +102,6 @@ function App() {
         <div className="realtime-api-wrapper-div">
           <div className="realtime-api-demo">
             <h1>JARVIS</h1>
-
             <button
               onClick={isRecording ? handleStopRecording : handleStartRecording}
             >

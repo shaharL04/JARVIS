@@ -214,11 +214,11 @@ const getGoogleEventsOnCertainDates = {
     properties: {
       startDate: {
         type: "string",
-        description: "The starting date in ISO 8601 format (e.g., '2024-10-21T00:00:00'), marking the beginning of the date range to retrieve events."
+        description: "The starting date in ISO 8601 format (e.g., '2024-10-21T00:00:00Z'), marking the beginning of the date range to retrieve events."
       },
       endDate: {
         type: "string",
-        description: "The ending date in ISO 8601 format (e.g., '2024-10-21T23:59:59'), marking the end of the date range to retrieve events."
+        description: "The ending date in ISO 8601 format (e.g., '2024-10-21T23:59:59Z'), marking the end of the date range to retrieve events."
       }
     },
     required: ["startDate", "endDate"]
