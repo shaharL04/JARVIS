@@ -45,30 +45,16 @@ export const functions = {
       console.log("agrs: "+JSON.stringify(args))
       const emailData = {
         message: {
-            subject: "Hello from Microsoft Graph",
+            subject: args.subject,
             body: {
                 contentType: "Text", 
-                content: "This is a test email sent using Microsoft Graph API."
+                content: args.body
             },
             toRecipients: [
                 {
                     emailAddress: {
-                        address: "shaharliba9@gmail.com" 
+                        address: args.to
                     }
-                }
-            ],
-            ccRecipients: [
-                {
-                    emailAddress: {
-                        address: "shaharliba10@gmail.com"
-                    }
-                }
-            ],
-            attachments: [
-                {
-                    "@odata.type": "#microsoft.graph.fileAttachment",
-                    name: "hello_world.txt",
-                    contentBytes: "aGVsbG8gd29ybGQh"
                 }
             ]
         },
@@ -82,7 +68,7 @@ export const functions = {
         
         const response = await axios.post(
           "http://localhost:5000/sendOutlookEmail",
-          {emailData: args}, 
+          {emailData: emailData}, 
           {
             headers: {
               Authorization: `Bearer ${token}`, 
