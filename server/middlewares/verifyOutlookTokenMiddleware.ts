@@ -26,11 +26,11 @@ const verifyOutlookTokenMiddleware = async (req: Request, res: Response, next: N
             client_secret: process.env.AZURE_AD_CLIENT_SECRET,
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
-            scope: 'Calendars.Read Calendars.ReadWrite Mail.Read Mail.Send User.Read offline_access',
+            scope: 'https://graph.microsoft.com/.default',
           };
       
           const response = await axios.post(
-            `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`,
+            `https://login.microsoftonline.com/common/oauth2/v2.0/token`,
             qs.stringify(data),
             {
               headers: {
@@ -41,7 +41,7 @@ const verifyOutlookTokenMiddleware = async (req: Request, res: Response, next: N
 
           
     
-        console.log("New access token:", response.data.access_token);
+        console.log("New access tokenNNNNNN:", response.data);
         token = response.data.access_token;
     } catch (error:any) {
         console.error("Error refreshing Microsoft access token:", error.response?.data || error.message);
@@ -55,6 +55,7 @@ const verifyOutlookTokenMiddleware = async (req: Request, res: Response, next: N
                 Authorization: `Bearer ${token}`, 
             },
         });
+        console.log("response that should include access token"+ JSON.stringify(response.data))
 
         req.user = token;
 
