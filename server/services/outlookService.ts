@@ -51,7 +51,7 @@ class outlookService{
                   Authorization: `Bearer ${accessToken}`,
                 },
               });
-            console.log("those are the events I have on the dates: "+graphResponse.data)
+            console.log("those are the events I have on the dates: "+JSON.stringify(graphResponse.data))
             return graphResponse.data
         }catch(error:any){
             if (error.response) {
