@@ -102,7 +102,7 @@ function App() {
         <div className="realtime-api-wrapper-div">
           <div className="realtime-api-demo">
             <h1>JARVIS</h1>
-            <button onClick={() => functions.send_outlook_email("test")}>brrrrrr</button>
+            <button onClick={() => functions.create_outlook_event("test")}>brrrrrr</button>
             <button
               onClick={isRecording ? handleStopRecording : handleStartRecording}
             >

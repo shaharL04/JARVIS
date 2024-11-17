@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getTimeZoneOffset } from './helperFunc';
 export const functions = {
     get_weather_per_location: async (args) => {
       const weatherData = await axios.get("http://localhost:5000/getWeatherPerLocation",{
@@ -87,20 +88,22 @@ export const functions = {
     create_outlook_event: async(args) => {
       console.log("agrs: "+JSON.stringify(args))
       console.log(JSON.stringify(args))
+      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       const exampleData = {
-        subject: "Test Meeting",
+        subject: args.title,
         start: {
-            dateTime: "2024-10-21T09:00:00", 
-            timeZone: "UTC"
+            dateTime: args.startTime, 
+            timeZone: userTimeZone
         },
         end: {
-            dateTime: "2024-10-21T10:30:00",
-            timeZone: "UTC"
+            dateTime: args.endTime,
+            timeZone: userTimeZone
         },
         attendees: [
             {
                 emailAddress: {
-                    address: "shaharliba9@gmail.com"
+                    address: args.attendees[0]
                 },
                 type: "required"
             }
@@ -114,7 +117,7 @@ export const functions = {
 
         const response = await axios.post(
           "http://localhost:5000/createOutlookEvent",
-          {eventData: args}, 
+          {eventData: exampleData}, 
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -133,8 +136,8 @@ export const functions = {
     get_outlook_events_on_certain_dates: async(args) => {
       console.log("agrs: "+JSON.stringify(args))
       const exampleData = {
-        "startDate": "2024-10-21T00:00:00",
-        "endDate": "2024-10-26T23:59:59"
+        "startDate": args.startDate,
+        "endDate": args.endDate
       };
 
 
@@ -144,7 +147,7 @@ export const functions = {
 
           const response = await axios.post(
             "http://localhost:5000/getOutlookEventsOnCertainDates",
-            args, 
+            exampleData, 
             {
               headers: {
                 Authorization: `Bearer ${token}`, 
@@ -185,16 +188,7 @@ export const functions = {
     create_google_event: async (args) => {
       console.log("agrs: "+JSON.stringify(args))
 
-      const getTimeZoneOffset = (timeZone) => {
-        const now = new Date();
-        const formatter = new Intl.DateTimeFormat("en-US", {
-          timeZone,
-          timeZoneName: "short",
-        });
-        const parts = formatter.formatToParts(now);
-        const offsetPart = parts.find((part) => part.type === "timeZoneName");
-        return offsetPart.value; // "GMT+2" for example
-      };
+      
     
       try {
         const token = localStorage.getItem("jwtToken");
