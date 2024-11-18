@@ -163,27 +163,46 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
   // Play combined audio chunks in sequence
   const playNextInQueue = async (audioPlayerRef) => {
     if (audioQueue.length === 0 || isPlaying) return;
-  
+
     isPlaying = true;
-  
-    // Combine multiple chunks (up to CHUNK_BATCH_SIZE) from the queue
+
     let combinedPCMData = [];
-    const chunksToProcess = Math.min(CHUNK_BATCH_SIZE, audioQueue.length); // Process up to CHUNK_BATCH_SIZE or the remaining chunks
-  
+    const chunksToProcess = Math.min(CHUNK_BATCH_SIZE, audioQueue.length);
+    const MAX_COMBINED_SIZE = 100000; // Define a maximum threshold
+
     for (let i = 0; i < chunksToProcess; i++) {
-      const audioBase64 = audioQueue.shift();
-      const audioBinary = atob(audioBase64);
-      const pcmData = new Uint8Array(audioBinary.length);
-      for (let j = 0; j < audioBinary.length; j++) {
-        pcmData[j] = audioBinary.charCodeAt(j);
-      }
-      combinedPCMData.push(...pcmData); // Accumulate PCM data
+        const audioBase64 = audioQueue.shift();
+        const audioBinary = atob(audioBase64);
+        const pcmData = new Uint8Array(audioBinary.length);
+
+        for (let j = 0; j < audioBinary.length; j++) {
+            pcmData[j] = audioBinary.charCodeAt(j);
+        }
+
+        // Check if adding the current chunk would exceed the size limit
+        if (combinedPCMData.length + pcmData.length > MAX_COMBINED_SIZE) {
+
+            const spaceLeft = MAX_COMBINED_SIZE - combinedPCMData.length;
+
+            //after the current combinedPCMData (...) Add only the portion that fits within the size limit
+            if (spaceLeft > 0) {
+                combinedPCMData.push(...pcmData.slice(0, spaceLeft));
+            }
+
+            // Put the remaining data back into the queue
+            const remainingData = pcmData.slice(spaceLeft);
+            audioQueue.unshift(btoa(String.fromCharCode(...remainingData)));
+
+            break;
+        }
+
+        // Otherwise, accumulate the full chunk
+        combinedPCMData.push(...pcmData);
     }
-  
-    // Combine with previously accumulated data
+
     accumulatedPCMData.push(...combinedPCMData);
-  
-    // Convert accumulated PCM data to WAV and clear accumulated data
+
+
     const wavData = convertPCMtoWAV(new Uint8Array(accumulatedPCMData));
     accumulatedPCMData = []; // Clear after converting to WAV
   
