@@ -43,18 +43,24 @@ function App() {
     } else {
       const storedToken = localStorage.getItem("jwtToken");
       if (storedToken) {
-        try {
-          const decoded = jwtDecode(storedToken);
-          console.log(decoded)
-          if (decoded.isAuth) {
-            setIsAuthenticated(true);
+          try {
+            const decoded = jwtDecode(storedToken);
+            const currentTimeAndDate = Math.floor(Date.now() / 1000);
+            console.log(JSON.stringify(decoded))
+            if(decoded.exp >= currentTimeAndDate){
+              if (decoded.isAuth) {
+                setIsAuthenticated(true);
+              }
+            }else{
+              localStorage.removeItem('jwtToken');
+            }
+          } catch (error) {
+            console.error("Invalid stored token:", error);
+            
           }
-        } catch (error) {
-          console.error("Invalid stored token:", error);
-          localStorage.removeItem("jwtToken");
-        }
       }
     }
+    //localStorage.removeItem("jwtToken");
 }, []);
 
   useWebSocket(setMessages, audioPlayerRef, wsRef);
