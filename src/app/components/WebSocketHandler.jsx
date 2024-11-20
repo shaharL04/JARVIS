@@ -303,9 +303,12 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
     functions[functionName](functionArguments)
         .then((result) => {
           const functionResponse = {
-            type: "function_response",
-            response_id: data.response_id, // ID to map the response back
-            result: JSON.stringify(result), // The fetched data
+            type: 'conversation.item.create',
+            item: {
+             type: 'function_call_output',
+              call_id: data.call_id,
+              output: JSON.stringify(result),
+            }
           };
 
             // Send the function output event
