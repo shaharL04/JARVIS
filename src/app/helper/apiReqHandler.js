@@ -16,6 +16,7 @@ export const functions = {
           category: args.category
         }
       });
+      console.log(newsData)
       return newsData
     },
 

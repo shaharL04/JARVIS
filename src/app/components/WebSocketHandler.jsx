@@ -286,7 +286,7 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
 
   const handleResponseFunctionCallArgsDone = (data, setMessages) => {
     const functionName = data.name;
-
+    console.log("functioncall arguments: "+ JSON.stringify(data))
     let functionArguments;
     try {
         functionArguments = JSON.parse(data.arguments);
@@ -302,18 +302,15 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
 
     functions[functionName](functionArguments)
         .then((result) => {
-            const functionOutputEvent = {
-                type: "conversation.item.create",
-                item: {
-                    type: "function_call_output",
-                    role: "system",
-                    output: JSON.stringify(result, null, 2)
-                }
-            };
+          const functionResponse = {
+            type: "function_response",
+            response_id: data.response_id, // ID to map the response back
+            result: JSON.stringify(result), // The fetched data
+          };
 
             // Send the function output event
             try {
-                wsRef.current.send(JSON.stringify(functionOutputEvent));
+                wsRef.current.send(JSON.stringify(functionResponse));
                 console.log("Function output event sent successfully.");
             } catch (error) {
                 console.error("Error sending function output event:", error);
@@ -330,7 +327,7 @@ export const useWebSocket = (setMessages, audioPlayerRef, wsRef) => {
         .catch((error) => {
             console.error("Error executing function:", error);
         });
-};
+  };
 
 
   const handleErrorEvent = (error, setMessages) => {
