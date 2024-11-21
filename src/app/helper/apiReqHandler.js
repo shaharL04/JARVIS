@@ -21,15 +21,8 @@ export const functions = {
     },
 
     convert_one_currency_to_another: async(args) => {
-      console.log("agrs: "+JSON.stringify(args))
-      const exampleData = {
-        base_currency: "THB",
-        amount: 1,
-        target_currency: "USD"
-      };
-
+      console.log("agrs: "+JSON.stringify(args));
       try {
-
           const response = await axios.get("http://localhost:5000/convertTwoCurrencies", {
             params: {
               currenciesData: args
@@ -66,8 +59,6 @@ export const functions = {
 
       try {
         const token = localStorage.getItem("jwtToken");
-
-        
         const response = await axios.post(
           "http://localhost:5000/sendOutlookEmail",
           {emailData: emailData}, 
@@ -165,10 +156,8 @@ export const functions = {
     },
 
     send_google_email: async (args) => {
-      console.log("agrs: "+JSON.stringify(args))
       try {
         const token = localStorage.getItem("jwtToken");
-
         const response = await axios.post(
           "http://localhost:5000/sendGoogleEmail",
           { emailData: args },
@@ -187,10 +176,6 @@ export const functions = {
     },
     
     create_google_event: async (args) => {
-      console.log("agrs: "+JSON.stringify(args))
-
-      
-    
       try {
         const token = localStorage.getItem("jwtToken");
 
@@ -218,12 +203,6 @@ export const functions = {
     },
     
     get_google_events_on_certain_dates: async (args) => {
-      console.log("agrs: "+JSON.stringify(args))
-      const exampleData = {
-        startDate: "2024-12-03T00:00:00Z", 
-        endDate: "2024-12-03T23:59:59Z"    
-      };
-    
       try {
         const token = localStorage.getItem("jwtToken");
 
@@ -238,7 +217,6 @@ export const functions = {
           }
         );
         return response
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching events:', error.response?.data || error.message);
       }
