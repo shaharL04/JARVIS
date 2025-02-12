@@ -9,7 +9,7 @@ export const connectToOpenAiWebSocket = (clientSocket: WebSocket): WebSocket => 
 
     openaiWs = new WebSocket(openaiUrl, {
         headers: {
-            Authorization: `Bearer sk-CWb3g0xHbN0zXYz70qn1IeTq_kvL3BIbXmFRO8wqH6T3BlbkFJHhU-oiRlpKofImvsnr64-MUKKM54UsFsK97S7tzagA`,
+            Authorization: `Bearer ${process.env.OPENAI_KEY}`,
             'OpenAI-Beta': 'realtime=v1',
         },
     });
