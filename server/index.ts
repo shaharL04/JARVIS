@@ -19,7 +19,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'default_secret', // Use a secure secret
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, maxAge: 86400000 } // Secure: true for HTTPS
+    cookie: { secure: false, maxAge: 86400000 } // Secure: true for HTTPSs
   }));
 
 app.use('/', router);
