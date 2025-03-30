@@ -22,4 +22,5 @@ The **JARVIS** project is a real-time AI assistant that offers both voice and te
 **Backend**: In order to view the backend code you can check the backend branch
 
 ## Demo
-https://www.dropbox.com/scl/fi/bm9i7p1ivraurcwlmuqbm/JARVIS1.mp4?rlkey=xnlxbrg29c2ns7noflhrc8039&st=iup1lt14&dl=0
+[https://www.dropbox.com/scl/fi/bm9i7p1ivraurcwlmuqbm/JARVIS1.mp4?rlkey=xnlxbrg29c2ns7noflhrc8039&st=iup1lt14&dl=0](https://www.dropbox.com/scl/fi/bm9i7p1ivraurcwlmuqbm/JARVIS1.mp4?rlkey=xnlxbrg29c2ns7noflhrc8039&st=iup1lt14&raw=1
+)
