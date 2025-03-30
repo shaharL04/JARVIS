@@ -16,4 +16,9 @@ The **JARVIS** project is a real-time AI assistant that offers both voice and te
 - **Real-Time Processing**: WebSockets
 - **AI Integration**: OpenAI RealTime API
 
+## How to View the code
+**Frontend**: In order to view the frontend code you can check the frontend branch
+<br/>
+**Backend**: In order to view the backend code you can check the backend branch
+
 ## Demo
